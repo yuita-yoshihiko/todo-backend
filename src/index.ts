@@ -20,4 +20,15 @@ app.get('/', (c) => {
 
 app.get("/api/todos", (c) => c.json(todos.filter((todo) => !todo.delete_flg)));
 
+app.post("/api/todos", async (c) => {
+  const { title } = await c.req.json<{ title: string }>();
+  if (!title) {
+    return c.json({ message: "タイトルは必須です" }, 400);
+  }
+  const newId = todos[todos.length - 1].id + 1;
+  const newTodo: Todo = { id: newId, title, delete_flg: false };
+  todos = [...todos, newTodo];
+  return c.json(newTodo);
+});
+
 export default app
