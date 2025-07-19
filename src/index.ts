@@ -47,4 +47,16 @@ app.put("/api/todos/:id", async (c) => {
   return c.json(todos[index]);
 });
 
+app.put("/api/todos/:id/delete", async (c) => {
+  const id = c.req.param("id");
+  const index = todos.findIndex((todo) => todo.id === Number(id));
+
+  if (index === -1) {
+    return c.json({ message: "Todoは存在しません" }, 404);
+  }
+
+  todos[index] = { ...todos[index], delete_flg: true };
+  return c.json(todos[index]);
+});
+
 export default app
