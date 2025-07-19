@@ -31,4 +31,20 @@ app.post("/api/todos", async (c) => {
   return c.json(newTodo);
 });
 
+app.put("/api/todos/:id", async (c) => {
+  const id = c.req.param("id");
+  const index = todos.findIndex((todo) => todo.id === Number(id));
+
+  if (index === -1) {
+    return c.json({ message: "Todoは存在しません" }, 404);
+  }
+
+  const { title } = await c.req.json<{ title: string }>();
+  if (!title) {
+    return c.json({ message: "タイトルは必須です" }, 400);
+  }
+  todos[index] = { ...todos[index], title };
+  return c.json(todos[index]);
+});
+
 export default app
